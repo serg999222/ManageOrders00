@@ -26,9 +26,13 @@ namespace ManageOrders00.Controllers
             return View(await manageOrders00Context.ToListAsync());
         }
 
-        public async Task<IActionResult> EditForOrders()
+        public async Task<IActionResult> EditForOrders(int? id)
         {
-            var manageOrders00Context = _context.Position.Include(p => p.Order).Include(p => p.Product);
+            if (id == null || _context.Position == null)
+            {
+                return NotFound();
+            }
+            var manageOrders00Context = _context.Position.Include(p => p.Order).Include(p => p.Product).Where(i => i.OrderId == id);
             return View(await manageOrders00Context.ToListAsync());
         }
 
