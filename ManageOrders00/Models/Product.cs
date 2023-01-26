@@ -10,7 +10,6 @@
 
         public double Price { get; set; }   
 
-        public Position Position { get; set; }
 
 
 

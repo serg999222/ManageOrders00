@@ -59,7 +59,7 @@ namespace ManageOrders00.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("OrderId,CustomerId")] Order order)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 _context.Add(order);
                 await _context.SaveChangesAsync();

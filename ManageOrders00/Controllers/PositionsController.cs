@@ -26,6 +26,12 @@ namespace ManageOrders00.Controllers
             return View(await manageOrders00Context.ToListAsync());
         }
 
+        public async Task<IActionResult> EditForOrders()
+        {
+            var manageOrders00Context = _context.Position.Include(p => p.Order).Include(p => p.Product);
+            return View(await manageOrders00Context.ToListAsync());
+        }
+
         // GET: Positions/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -61,7 +67,7 @@ namespace ManageOrders00.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PositionId,OrderId,ProductId,ProductCount")] Position position)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 _context.Add(position);
                 await _context.SaveChangesAsync();

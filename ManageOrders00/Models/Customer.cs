@@ -8,6 +8,5 @@
 
         public string CustomerSurName { get; set; }
 
-        public Order Order { get; set; }
     }
 }
