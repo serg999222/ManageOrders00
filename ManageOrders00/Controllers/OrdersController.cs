@@ -36,7 +36,22 @@ namespace ManageOrders00.Controllers
 
             var order = await _context.Order
                 .Include(o => o.Customer)
+                .Include(o => o.Positions.Where(i => i.OrderId == id))
                 .FirstOrDefaultAsync(m => m.OrderId == id);
+
+            var positionList = order.Positions;
+            var productDiteils = await Task.Run(() => _context.Product);
+            var productList = new List<Product>();
+            foreach (var pos in positionList)
+            {
+              var prod = productDiteils.FirstOrDefault(i => i.ProductId == pos.ProductId);
+                productList.Add(prod);
+            }
+            
+
+
+            ViewBag.Product = productList;
+
             if (order == null)
             {
                 return NotFound();
@@ -58,26 +73,16 @@ namespace ManageOrders00.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        /*   public async Task<IActionResult> Create([Bind("OrderId,CustomerId")] Order order)
-           {
-               if (!ModelState.IsValid)
-               {
-                   _context.Add(order);
-                   await _context.SaveChangesAsync();
-                   return RedirectToAction(nameof(Index));
-               }
-               ViewData["CustomerSurName"] = new SelectList(_context.Customer, order.Customer.CustomerSurName);
-               ViewData["CustomerId"] = new SelectList(_context.Customer, "CustomerId", "CustomerId", order.CustomerId);
-               return View(order);
-           }*/
+       
         public async Task<IActionResult> Create([Bind("OrderId,CustomerId,CustomerSurName")] Order order, [Bind("CustomerSurName")] int customer)
         {
             order.CustomerId = customer;
+            order.OrderReleaseDate = DateTime.Now;
             if (!ModelState.IsValid)
             {
                 _context.Add(order);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", new {id = order.OrderId});
             }
             ViewData["CustomerSurName"] = new SelectList(_context.Customer, order.Customer.CustomerSurName);
             ViewData["CustomerId"] = new SelectList(_context.Customer, "CustomerId", "CustomerId", order.CustomerId);

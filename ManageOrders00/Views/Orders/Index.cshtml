@@ -16,7 +16,10 @@
                 @Html.DisplayNameFor(model => model.Customer)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.OrderId)
+                @Html.DisplayNameFor(model => model.OrderId )
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderReleaseDate)
             </th>
             <th></th>
         </tr>
@@ -31,6 +34,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.OrderId)
             </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderReleaseDate)
+                </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.OrderId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.OrderId">Details</a> |

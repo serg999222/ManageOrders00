@@ -20,3 +20,10 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.positionList{
+    margin-top: 100px;
+}
+.table__order{
+    max-width: 1000px;
+}

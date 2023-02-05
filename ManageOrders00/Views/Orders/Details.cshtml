@@ -1,22 +1,139 @@
 ﻿@model ManageOrders00.Models.Order
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Деталі замовлення";
 }
 
-<h1>Details</h1>
+<h1 >Деталі замовлення</h1>
 
 <div>
-    <h4>Order</h4>
+    <hr class="table__order" />
+    <table class="table table__order">
+        
+        <thead>
+        
+            <tr>
+               
+                <th>
+                    Дата
+                </th>
+                <th>
+                    Номер замовлення
+                </th>
+                <th>
+                    Покупець
+                </th>
+                <th>
+                   Вартість Замовлення
+                </th>
+
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>       
+                <tr>
+                    <td>
+                       @Html.DisplayFor(model => model.OrderReleaseDate)
+                    </td>
+                    <td>
+                       @Html.DisplayFor(model => model.OrderId)
+                    </td>
+                    <td>
+                       @Html.DisplayFor(model => model.Customer.CustomerName)
+                       @Html.DisplayFor(model => model.Customer.CustomerSurName)
+                    </td>
+                    <td>
+                      @{double summ = 0;}
+                         @foreach (Position item in Model.Positions)
+                         { 
+                            @foreach (Product prod in @ViewBag.Product)
+                            {
+                               @if (prod.ProductId == item.ProductId)
+                               {
+                                   summ += prod.Price * item.ProductCount;
+                               }
+                            }
+                         }
+                       <p>@summ грн.</p>
+                    </td>
+
+               
+                </tr>         
+        </tbody>
+    </table>
+</div>
+<div class="positionList">
+<h4>Список Позицій</h4>
+    <a asp-controller="Positions" asp-action="Create">Create New</a>
     <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Customer)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Customer.CustomerId)
-        </dd>
-    </dl>
+    <table class="table">
+        <thead>
+            <tr>
+               
+                <th>
+                    Позиції
+                </th>
+                <th>
+                    Кількість
+                </th>
+                <th>
+                    Ціна од.
+                </th>
+                <th>
+                    Вартість
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>             
+                <td>
+                    @foreach (Position item in Model.Positions)
+                    {
+                        @foreach (Product prod in @ViewBag.Product)
+                        {
+                            @if (prod.ProductId == item.ProductId)
+                            {
+                                <p>@prod.ProductName</p>
+                            }
+                        }
+                    }
+                </td>
+                <td>
+                    @foreach (Position item in Model.Positions)
+                    {
+                        <p>@item.ProductCount</p>
+                    }
+                </td>
+                <td>
+                    @foreach (Position item in Model.Positions)
+                    {
+                        @foreach (Product prod in @ViewBag.Product)
+                        {
+                            @if (prod.ProductId == item.ProductId)
+                            {
+                                <p>@prod.Price грн.</p>
+                            }
+                        }
+                    }
+                </td>
+                <td>
+                    @foreach (Position item in Model.Positions)
+                    {
+                        @foreach (Product prod in @ViewBag.Product)
+                        {
+                            @if (prod.ProductId == item.ProductId)
+                            {
+
+                                <p>@(prod.Price * item.ProductCount) грн.</p>
+                            }
+                        }
+                    }
+                </td>
+
+            </tr>
+        </tbody>
+    </table>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.OrderId">Edit</a> |
