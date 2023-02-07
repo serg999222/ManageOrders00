@@ -27,3 +27,6 @@ body {
 .table__order{
     max-width: 1000px;
 }
+.form__poditionId{
+    margin-bottom: 20px;
+}

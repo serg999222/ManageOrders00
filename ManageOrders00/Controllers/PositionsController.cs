@@ -57,10 +57,10 @@ namespace ManageOrders00.Controllers
         }
 
         // GET: Positions/Create
-        public IActionResult Create()
+        public IActionResult Create(int? id)
         {
-            ViewData["OrderId"] = new SelectList(_context.Order, "OrderId", "OrderId");
-            ViewData["ProductId"] = new SelectList(_context.Set<Product>(), "ProductId", "ProductId");
+            ViewBag.OrderNumber = new { id };
+            ViewData["ProductName"] = new SelectList(_context.Set<Product>(), "ProductId", "ProductName");
             return View();
         }
 
@@ -71,13 +71,24 @@ namespace ManageOrders00.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PositionId,OrderId,ProductId,ProductCount")] Position position)
         {
-            if (!ModelState.IsValid)
+            var positions = _context.Position.Where(r => r.OrderId == position.OrderId).ToList();
+            int AvailabilityResult;
+            foreach(var i in positions)
+            {
+                if(i.ProductId == position.ProductId)
+                {
+                    ModelState.AddModelError("ProductId", "Такий товар вже є у вас в замовленні");
+                    ViewBag.OrderNumber = new { id = position.OrderId };
+                    ViewData["ProductName"] = new SelectList(_context.Set<Product>(), "ProductId", "ProductName");
+                    return View();
+                }
+            }
+            if (ModelState.IsValid)
             {
                 _context.Add(position);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Orders", new { id = position.OrderId });
             }
-            ViewData["OrderId"] = new SelectList(_context.Order, "OrderId", "OrderId", position.OrderId);
             ViewData["ProductId"] = new SelectList(_context.Set<Product>(), "ProductId", "ProductId", position.ProductId);
             return View(position);
         }
@@ -95,8 +106,9 @@ namespace ManageOrders00.Controllers
             {
                 return NotFound();
             }
-            ViewData["OrderId"] = new SelectList(_context.Order, "OrderId", "OrderId", position.OrderId);
-            ViewData["ProductId"] = new SelectList(_context.Set<Product>(), "ProductId", "ProductId", position.ProductId);
+            ViewBag.PositionNum = new {  id };
+            ViewBag.ProductId = new { productId = position.ProductId };
+            ViewBag.OrderNum = new { p = position.OrderId  };
             return View(position);
         }
 
@@ -111,6 +123,7 @@ namespace ManageOrders00.Controllers
             {
                 return NotFound();
             }
+
 
             if (ModelState.IsValid)
             {
@@ -130,10 +143,10 @@ namespace ManageOrders00.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details","Orders", new { id = position.OrderId });
             }
-            ViewData["OrderId"] = new SelectList(_context.Order, "OrderId", "OrderId", position.OrderId);
-            ViewData["ProductId"] = new SelectList(_context.Set<Product>(), "ProductId", "ProductId", position.ProductId);
+            ViewBag.PositionNum = new { id };
+            ViewBag.OrderNum = new { p = position.OrderId };
             return View(position);
         }
 
@@ -153,6 +166,7 @@ namespace ManageOrders00.Controllers
             {
                 return NotFound();
             }
+            ViewBag.OrderId = new { orderId = position.OrderId };
 
             return View(position);
         }
@@ -167,13 +181,14 @@ namespace ManageOrders00.Controllers
                 return Problem("Entity set 'ManageOrders00Context.Position'  is null.");
             }
             var position = await _context.Position.FindAsync(id);
+            var positionOrderId = position.OrderId;
             if (position != null)
             {
                 _context.Position.Remove(position);
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Details", "Orders", new { id = positionOrderId });
         }
 
         private bool PositionExists(int id)

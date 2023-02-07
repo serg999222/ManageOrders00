@@ -1,22 +1,22 @@
 ﻿@model IEnumerable<ManageOrders00.Models.Customer>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Покупці";
 }
 
-<h1>Index</h1>
+<h1>Покупці</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Додати нового</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.CustomerName)
+                Ім'я покупця
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CustomerSurName)
+                Прізвище покупця
             </th>
             <th></th>
         </tr>
@@ -31,9 +31,9 @@
                 @Html.DisplayFor(modelItem => item.CustomerSurName)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.CustomerId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.CustomerId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.CustomerId">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.CustomerId">Змінити</a> |
+                <a asp-action="Details" asp-route-id="@item.CustomerId">Деталі</a> |
+                <a asp-action="Delete" asp-route-id="@item.CustomerId">Видалити</a>
             </td>
         </tr>
 }

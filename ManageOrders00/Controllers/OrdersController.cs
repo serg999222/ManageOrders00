@@ -74,11 +74,11 @@ namespace ManageOrders00.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
        
-        public async Task<IActionResult> Create([Bind("OrderId,CustomerId,CustomerSurName")] Order order, [Bind("CustomerSurName")] int customer)
+        public async Task<IActionResult> Create([Bind("OrderId,CustomerId,CustomerSurName")] Order order,  int customer)
         {
             order.CustomerId = customer;
             order.OrderReleaseDate = DateTime.Now;
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 _context.Add(order);
                 await _context.SaveChangesAsync();
