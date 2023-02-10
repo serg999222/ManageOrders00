@@ -14,7 +14,7 @@ namespace ManageOrders00.Models
 
         [Display(Name ="Кількість")]
         [Required]
-        [Range(1,1000)]
+        [Range(1,1000, ErrorMessage = "Можливий діапазон кількості від 1 до 1000")]
         public int ProductCount { get; set; }
 
         public Order? Order { get; set; }

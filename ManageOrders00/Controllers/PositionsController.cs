@@ -19,42 +19,6 @@ namespace ManageOrders00.Controllers
             _context = context;
         }
 
-        // GET: Positions
-        public async Task<IActionResult> Index()
-        {
-            var manageOrders00Context = _context.Position.Include(p => p.Order).Include(p => p.Product);
-            return View(await manageOrders00Context.ToListAsync());
-        }
-
-        public async Task<IActionResult> EditForOrders(int? id)
-        {
-            if (id == null || _context.Position == null)
-            {
-                return NotFound();
-            }
-            var manageOrders00Context = _context.Position.Include(p => p.Order).Include(p => p.Product).Where(i => i.OrderId == id);
-            return View(await manageOrders00Context.ToListAsync());
-        }
-
-        // GET: Positions/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.Position == null)
-            {
-                return NotFound();
-            }
-
-            var position = await _context.Position
-                .Include(p => p.Order)
-                .Include(p => p.Product)
-                .FirstOrDefaultAsync(m => m.PositionId == id);
-            if (position == null)
-            {
-                return NotFound();
-            }
-
-            return View(position);
-        }
 
         // GET: Positions/Create
         public IActionResult Create(int? id)

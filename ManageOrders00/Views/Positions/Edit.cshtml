@@ -14,13 +14,11 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="PositionId" />
             <div class="form-group">
-               @* <label class="control-label" for="OrderId">ID Замовлення</label>*@
                 <input type="hidden" class="form-control" for="OrderId" value="@ViewBag.OrderNum.p" name="OrderId" />
                 <input type="hidden" class="form-control" for="OrderId" value="@ViewBag.ProductId.productId" name="ProductId" />
             </div>
 
             <div class="form-group form__poditionId">
-                @*<label for="PopsitionId" class="control-label">ID позиції</label>*@
                 <input type="hidden" for="PopsitionId" class="form-control" value="@ViewBag.PositionNum.id" name="PopsitionId" disabled />
             </div>
 

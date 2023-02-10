@@ -20,10 +20,41 @@ namespace ManageOrders00.Controllers
         }
 
         // GET: Orders
-        public async Task<IActionResult> Index()
+        /*      public async Task<IActionResult> Index()
+              {
+                  var manageOrders00Context = _context.Order.Include(o => o.Customer);
+                  return View(await manageOrders00Context.ToListAsync());
+              }*/
+
+        public async Task<IActionResult> Index(string searchString,DateTime beginOrderReleasDate, DateTime finalOrderReleasDate)
         {
-            var manageOrders00Context = _context.Order.Include(o => o.Customer);
-            return View(await manageOrders00Context.ToListAsync());
+            SelectList customerSurname = new SelectList(_context.Customer.Select(i => i.CustomerSurName));
+            SelectList orderReleasDate = new SelectList(_context.Order.Select(i => i.OrderReleaseDate));
+            ViewBag.CustomerSurName =  customerSurname;
+            ViewBag.OrderReleaseDate = orderReleasDate;
+            var orders = from m in _context.Order.Include(o => o.Customer)
+                         select m;
+            
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                orders = orders.Where(s => s.Customer.CustomerSurName.Contains(searchString));
+            }
+            if (beginOrderReleasDate.Year != 1 && finalOrderReleasDate.Year != 1)
+            {
+                orders = orders.Where(i => i.OrderReleaseDate > beginOrderReleasDate);
+                orders = orders.Where(i => i.OrderReleaseDate <= finalOrderReleasDate);
+            }
+            else if (beginOrderReleasDate.Year == 1 && finalOrderReleasDate.Year != 1)
+            {
+                orders = orders.Where(i => i.OrderReleaseDate <= finalOrderReleasDate);
+            }
+            else if (finalOrderReleasDate.Year == 1 && beginOrderReleasDate.Year != 1)
+            {
+                orders = orders.Where(i => i.OrderReleaseDate > beginOrderReleasDate);
+            }
+
+
+            return View(await orders.ToListAsync());
         }
 
         // GET: Orders/Details/5
@@ -69,8 +100,7 @@ namespace ManageOrders00.Controllers
         }
 
         // POST: Orders/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+       
         [HttpPost]
         [ValidateAntiForgeryToken]
        
@@ -89,58 +119,6 @@ namespace ManageOrders00.Controllers
             return View(order);
         }
 
-        // GET: Orders/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.Order == null)
-            {
-                return NotFound();
-            }
-
-            var order = await _context.Order.FindAsync(id);
-            if (order == null)
-            {
-                return NotFound();
-            }
-            ViewData["CustomerId"] = new SelectList(_context.Customer, "CustomerId", "CustomerId", order.CustomerId);
-            return View(order);
-        }
-
-        // POST: Orders/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("OrderId,CustomerId")] Order order)
-        {
-            if (id != order.OrderId)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(order);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!OrderExists(order.OrderId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CustomerId"] = new SelectList(_context.Customer, "CustomerId", "CustomerId", order.CustomerId);
-            return View(order);
-        }
 
         // GET: Orders/Delete/5
         public async Task<IActionResult> Delete(int? id)

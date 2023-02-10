@@ -33,7 +33,7 @@
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="PositionId" />
-        <input type="submit" value="Підтвердити" class="btn btn-danger" /> |
+        <input type="submit" value="Видалити" class="btn btn-danger" /> |
         <a asp-controller="Orders" asp-action="Details" asp-route-id="@ViewBag.OrderId.orderId">Повернутися в "Деталі замовлення"</a>
     </form>
 </div>

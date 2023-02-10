@@ -4,6 +4,40 @@
     ViewData["Title"] = "Index";
 }
 
+
+
+<div>
+    <div class="col-md-5" style="margin: 0 auto;">
+        <h4>Фільтрація даних</h4>
+    </div>
+    <form asp-action="Index" style="display:flex; border-block-end: solid 1px #0d6efd; box-shadow: 0px 2px 15px; padding: 10px 20px;">
+      
+        <div class="col-md-5" style="margin: 0 0 0 40px;">
+            <h5 style="margin-bottom:0;">За період</h5>
+            <div style="display:flex; ">
+                <div style="margin-right:5px">
+                    <p style="margin-bottom:0;">з</p>
+                    <select name="beginOrderReleasDate" class="form-control" asp-items="@ViewBag.OrderReleaseDate"><option value=""></option></select>
+                </div>
+                <div style="margin-bottom:1rem;">
+                    <p style="margin-bottom:0;">По</p>
+                    <select name="finalOrderReleasDate" class="form-control" asp-items="@ViewBag.OrderReleaseDate"><option value=""></option></select>
+                </div>
+            </div>
+            <div style="margin: 0 0 0 auto;">
+                <input type="submit" value="Застосувати" class="btn btn-primary" />
+            </div>
+        </div>
+
+        <div class="col-md-5" >
+            <h5 style="margin:auto;">За прізвищем</h5>
+            <br/>
+            <select name="searchString" class="form-control" asp-items="@ViewBag.CustomerSurName"><option value=""></option></select>
+        </div>
+    </form>
+</div>
+
+<br />
 <h1>Замовлення</h1>
 
 <p>
@@ -45,3 +79,6 @@
 }
     </tbody>
 </table>
+
+
+

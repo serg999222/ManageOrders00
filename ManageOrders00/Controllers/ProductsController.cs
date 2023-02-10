@@ -52,14 +52,21 @@ namespace ManageOrders00.Controllers
         }
 
         // POST: Products/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+      
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ProductId,ProductName,ProductDescription,Price")] Product product)
         {
+            var isHasProductName = _context.Product.Select(i => i.ProductName).ToList().Contains(product.ProductName);
+
+            if (isHasProductName)
+            {
+                ModelState.AddModelError("ProductName", "Таке найменування товару вже є!");
+            }
             if (ModelState.IsValid)
             {
+              
+
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
